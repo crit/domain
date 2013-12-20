@@ -1,8 +1,18 @@
 <?php
 namespace Domain;
 
+/**
+ * Class Domain
+ *
+ * @package Domain
+ */
 class Domain
 {
+    /**
+     * @param string $url
+     *
+     * @return null|string
+     */
     static function Sub($url)
     {
         if (self::isIP($url)) return null; // disregard IP addresses
@@ -20,6 +30,11 @@ class Domain
         return $sub[0];
     }
 
+    /**
+     * @param string $url
+     *
+     * @return null|string
+     */
     static function TLD($url)
     {
         if (self::isIP($url)) return null; // disregard IP Addresses
@@ -33,6 +48,11 @@ class Domain
         return $parts[0];
     }
 
+    /**
+     * @param string $url
+     *
+     * @return null|string
+     */
     static function Identity($url)
     {
         if (self::isIP($url)) return null;
@@ -46,17 +66,32 @@ class Domain
         return implode('.', $parts);
     }
 
+    /**
+     * @param string $value
+     *
+     * @return bool
+     */
     static function isLocal($value)
     {
         return (strpos($value, '.') === false);
     }
 
+    /**
+     * @param string $value
+     *
+     * @return bool
+     */
     static function isIP($value)
     {
         $value = preg_replace('/^(http|https|file|ftp):\/\//', '', $value);
         return (bool) filter_var($value, FILTER_VALIDATE_IP);
     }
 
+    /**
+     * @param string $value
+     *
+     * @return mixed
+     */
     static function Host($value)
     {
         if (!preg_match('/^(http|file|ftp)/', $value)) $value = "http://$value";
