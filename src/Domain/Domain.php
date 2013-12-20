@@ -33,7 +33,7 @@ class Domain
         return $parts[0];
     }
 
-    static function Registerable($url)
+    static function Identity($url)
     {
         if (self::isIP($url)) return null;
 
@@ -53,12 +53,13 @@ class Domain
 
     static function isIP($value)
     {
+        $value = preg_replace('/^(http|https|file|ftp):\/\//', '', $value);
         return (bool) filter_var($value, FILTER_VALIDATE_IP);
     }
 
     static function Host($value)
     {
-        if (preg_match('/^(http|file|ftp)/i', $value) === false) $value = "http://$value";
+        if (!preg_match('/^(http|file|ftp)/', $value)) $value = "http://$value";
         return parse_url($value, PHP_URL_HOST);
     }
 }

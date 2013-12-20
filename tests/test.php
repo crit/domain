@@ -8,8 +8,9 @@ function tell($msg) {
 }
 
 function format($value, $result, $pass, $desired) {
-    $desired = json_encode($desired);
-    $result = json_encode($result);
+    $desired = is_string($desired) ? $desired : json_encode($desired);
+    $result = is_string($result) ? $result : json_encode($result);
+    $value = is_string($value) ? $value : json_encode($value);
     $pass = $pass ? " " : "-";
     return "\t$pass $value => $result ($desired)";
 }
@@ -57,9 +58,9 @@ $tests = array(
         'ftp://a.localhost.tld' => 'tld',
         'a.b.c.domain.tld' => 'tld',
         'file://a.b.c.domain.tld/file.pdf' => 'tld',
-        'http://a.b.c.domain.co.uk' => 'co.uk'
+        'http://a.b.c.domain.co.uk' => 'co.uk' // THIS FAILS AT THE MOMENT
     ),
-    'Registerable' => array(
+    'Identity' => array(
         '1.0.0.0' => null,
         'http://1.0.0.0' => null,
         'localhost' => null,
@@ -74,6 +75,7 @@ $tests = array(
 
 foreach ($tests as $class => $expectation) {
     tell("Domain::$class");
+
     foreach ($expectation as $value => $desired) {
         $result = Domain::$class($value);
         $msg = format($value, $result, $result === $desired, $desired);
